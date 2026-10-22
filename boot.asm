@@ -1,5 +1,6 @@
 mov ah, 0x0e
-mov al, 'C'
+mov al, 'R'
+int 0x10
 
 jmp $
 

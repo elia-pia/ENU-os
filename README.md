@@ -5,7 +5,7 @@
 ## Project status
 
 - [x] Bootloader — basic implementation (work in progress)
-- [ ] Rust kernel
+- [ ] Rust based kernel
 - [ ] Essential system tools
 - [ ] Documentation and build system
 

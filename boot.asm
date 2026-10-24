@@ -57,12 +57,23 @@ options_print:
     int 0x10
     jmp options_print
 
+dis_error:            ;displays the command not found
+    mov ah, 0x0e
+    mov bx, cmd_error
+error_print:
+    mov al, [bx]
+    cmp al, 0
+    je input
+    inc bx
+    int 0x10
+    jmp options_print
+
 exec:
     cmp al, 'c'
     je dis_options
     cmp al, 'b'
     je boot
-    jmp input
+    jne dis_error
 
 end:
     jmp $
@@ -71,6 +82,7 @@ version:
     db "ENU-OS bootloader version 0.1", 0x0d, 0x0a, "press c to display options", 0x0d, 0x0a, 0x0d, 0x0a, 0
 
 options: db  0x0d, 0x0a, "press c to display this message", 0x0d, 0x0a, "press b to boot", 0
+cmd_error: db 0x0d, 0x0a, "command not found", 0
 username: db 0x0d, 0x0a, "@", "sys", '>', ' ' , 0
 
 times 510 - ($ - $$) db 0

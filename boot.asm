@@ -11,32 +11,16 @@ start:
     xor dx, dx
     int 0x10
 
-    xor ax, ax   ;preparation to print
+    xor ax, ax   ;preparation to print name and version
     mov ds, ax
     mov ah, 0x0e
     mov bx, version
-
-
-print_version:
-    mov al, [bx]
-    cmp al, 0
-    je input
-    int 0x10
-    inc bx
-    jmp print_version
-
+    call print
 
 input:                  ;give the user the a char input
     mov ah, 0x0e
     mov bx, username
-dis_name:
-    mov al, [bx]
-    cmp al, 0
-    je insert
-    int 0x10
-    inc bx
-    jmp dis_name
-insert:
+    call print
     xor ah, ah
     int 0x16
     mov ah, 0x0e
@@ -49,24 +33,14 @@ boot:
 dis_options:            ;displays the commands
     mov ah, 0x0e
     mov bx, options
-options_print:
-    mov al, [bx]
-    cmp al, 0
-    je input
-    inc bx
-    int 0x10
-    jmp options_print
+    call print
+    jmp input
 
-dis_error:            ;displays the command not found
+dis_error:            ;displays the command not found error
     mov ah, 0x0e
     mov bx, cmd_error
-error_print:
-    mov al, [bx]
-    cmp al, 0
-    je input
-    inc bx
-    int 0x10
-    jmp options_print
+    call print
+    jmp input
 
 exec:
     cmp al, 'c'
@@ -77,6 +51,16 @@ exec:
 
 end:
     jmp $
+
+print:
+    mov al, [bx]
+    cmp al, 0
+    je out
+    inc bx
+    int 0x10
+    jmp print
+    out:
+        ret
 
 version:
     db "ENU-OS bootloader version 0.1", 0x0d, 0x0a, "press c to display options", 0x0d, 0x0a, 0x0d, 0x0a, 0
